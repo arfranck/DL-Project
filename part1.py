@@ -1,7 +1,7 @@
 # example of loading the cifar10 dataset
 from matplotlib import pyplot
 from keras.datasets import cifar10
-from tf.keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 
 # load dataset
 (trainX, trainy), (testX, testy) = cifar10.load_data()
