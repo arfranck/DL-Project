@@ -1,9 +1,13 @@
-#---------------------------------------------------------------------
-#------ Dropout and Data Augmentation and Batch Normalization --------
-#---------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
 
-# baseline model with dropout and data augmentation on the cifar10 dataset
+This is a temporary script file.
+"""
+
 import sys
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 from matplotlib import pyplot
 from keras.datasets import cifar10
 from tensorflow.keras.utils import to_categorical
@@ -11,13 +15,11 @@ from keras.models import Sequential
 from keras.layers import Conv2D
 from keras.layers import MaxPooling2D
 from keras.layers import Dense
+from keras.layers import Dropout
 from keras.layers import Flatten
+from keras.layers import BatchNormalization
 from tensorflow.keras.optimizers import SGD
 from keras.preprocessing.image import ImageDataGenerator
-from keras.layers import Dropout
-from keras.layers import BatchNormalization
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
 
 # load train and test dataset
 def load_dataset():
@@ -66,25 +68,31 @@ def define_model():
 	model.add(Dropout(0.5))
 	model.add(Dense(10, activation='softmax'))
 	# compile model
-	opt = SGD(lr=0.001, momentum=0.9)
+	opt = SGD(learning_rate=0.001, momentum=0.9)
 	model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 	return model
 
 # plot diagnostic learning curves
 def summarize_diagnostics(history):
-    fig, (ax1, ax2) = pyplot.subplots(2)
+    fig, (ax1, ax2) = pyplot.subplots(2, figsize=(10, 10))
     # plot loss
     ax1.set_title('Cross Entropy Loss')
     ax1.plot(history.history['loss'], color='blue', label='train')
     ax1.plot(history.history['val_loss'], color='orange', label='test')
+    ax1.set_xlabel('Epochs', fontsize='small')
+    ax1.set_ylabel('Loss', fontsize='small')
+    ax1.legend(loc='best')
     # plot accuracy
     ax2.set_title('Classification Accuracy')
     ax2.plot(history.history['accuracy'], color='blue', label='train')
     ax2.plot(history.history['val_accuracy'], color='orange', label='test')
+    ax2.set_xlabel('Epochs', fontsize='small')
+    ax2.set_ylabel('Accuracy', fontsize='small')
+    ax2.legend(loc='best')
     # save plot to file
     fig.tight_layout()
     filename = sys.argv[0].split('/')[-1]
-    fig.savefig(filename + '_plot.png')
+    fig.savefig(filename + '_plot.pdf')
     pyplot.close()
 
 # run the test harness for evaluating a model
