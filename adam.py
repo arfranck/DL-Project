@@ -1,5 +1,6 @@
 #---------------------------------------------------------------------
-#------ Dropout and Data Augmentation and Batch Normalization --------
+#----------- DD2424 Deep Learning in Data Science Project ------------
+#----------- Cataldo Giuseppe, Franck Arthur, Nameki Malo ------------
 #---------------------------------------------------------------------
 
 # baseline model with dropout and data augmentation on the cifar10 dataset
