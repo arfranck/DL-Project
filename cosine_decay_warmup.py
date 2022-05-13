@@ -42,7 +42,7 @@ def prep_pixels(train, test):
 	# return normalized images
 	return train_norm, test_norm
 
-#https://github.com/arfranck/DL-Project/blob/main/cosdecay_warmup.py
+#https://github.com/Tony607/Keras_Bag_of_Tricks/blob/master/warmup_cosine_decay_scheduler.py
 def cosine_decay_with_warmup(global_step,
                              learning_rate_base,
                              total_steps,
