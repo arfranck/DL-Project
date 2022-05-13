@@ -61,20 +61,26 @@ def define_model():
 
 # plot diagnostic learning curves
 def summarize_diagnostics(history):
-	# plot loss
-	pyplot.subplot(211)
-	pyplot.title('Cross Entropy Loss')
-	pyplot.plot(history.history['loss'], color='blue', label='train')
-	pyplot.plot(history.history['val_loss'], color='orange', label='test')
-	# plot accuracy
-	pyplot.subplot(212)
-	pyplot.title('Classification Accuracy')
-	pyplot.plot(history.history['accuracy'], color='blue', label='train')
-	pyplot.plot(history.history['val_accuracy'], color='orange', label='test')
-	# save plot to file
-	filename = sys.argv[0].split('/')[-1]
-	pyplot.savefig(filename + '_plot.png')
-	pyplot.close()
+    fig, (ax1, ax2) = pyplot.subplots(2, figsize=(10, 10))
+    # plot loss
+    ax1.set_title('Cross Entropy Loss')
+    ax1.plot(history.history['loss'], color='blue', label='train')
+    ax1.plot(history.history['val_loss'], color='orange', label='test')
+    ax1.set_xlabel('Epochs', fontsize='small')
+    ax1.set_ylabel('Loss', fontsize='small')
+    ax1.legend(loc='best')
+    # plot accuracy
+    ax2.set_title('Classification Accuracy')
+    ax2.plot(history.history['accuracy'], color='blue', label='train')
+    ax2.plot(history.history['val_accuracy'], color='orange', label='test')
+    ax2.set_xlabel('Epochs', fontsize='small')
+    ax2.set_ylabel('Accuracy', fontsize='small')
+    ax2.legend(loc='best')
+    # save plot to file
+    fig.tight_layout()
+    filename = sys.argv[0].split('/')[-1]
+    fig.savefig(filename + '_plot.pdf')
+    pyplot.close()
 
 # run the test harness for evaluating a model
 def run_test_harness():
