@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
+#---------------------------------------------------------------------
+#----------- DD2424 Deep Learning in Data Science Project ------------
+#----------- Cataldo Giuseppe, Franck Arthur, Nameki Malo ------------
+#---------------------------------------------------------------------
 
 import sys
 import os
