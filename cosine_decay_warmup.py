@@ -24,23 +24,23 @@ from tensorflow import keras
 
 # load train and test dataset
 def load_dataset():
-	# load dataset
-	(trainX, trainY), (testX, testY) = cifar10.load_data()
-	# one hot encode target values
-	trainY = to_categorical(trainY)
-	testY = to_categorical(testY)
-	return trainX, trainY, testX, testY
+    # load dataset
+    (trainX, trainY), (testX, testY) = cifar10.load_data()
+    # one hot encode target values
+    trainY = to_categorical(trainY)
+    testY = to_categorical(testY)
+    return trainX, trainY, testX, testY
 
 # scale pixels
 def prep_pixels(train, test):
-	# convert from integers to floats
-	train_norm = train.astype('float32')
-	test_norm = test.astype('float32')
-	# normalize to range 0-1
-	train_norm = train_norm / 255.0
-	test_norm = test_norm / 255.0
-	# return normalized images
-	return train_norm, test_norm
+    # convert from integers to floats
+    train_norm = train.astype('float32')
+    test_norm = test.astype('float32')
+    # normalize to range 0-1
+    train_norm = train_norm / 255.0
+    test_norm = test_norm / 255.0
+    # return normalized images
+    return train_norm, test_norm
 
 #https://github.com/Tony607/Keras_Bag_of_Tricks/blob/master/warmup_cosine_decay_scheduler.py
 def cosine_decay_with_warmup(global_step,
