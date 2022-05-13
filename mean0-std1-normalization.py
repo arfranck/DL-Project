@@ -36,10 +36,6 @@ def prep_pixels(train, test):
 	# normalize to mean 0 std 1
 	mean = train_norm.mean(axis=0)
 	std = train_norm.std(axis=0)
-	print(mean)
-	print(mean.shape)
-	print(std)
-	print(std.shape)
 	train_norm = (train_norm - mean) / std 
 	test_norm = (test_norm - mean) / std 
 	# return normalized images
