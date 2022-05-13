@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------
-#------------------------ Cosine Decay Restarts ----------------------
+#------ Dropout and Data Augmentation and Batch Normalization --------
 #---------------------------------------------------------------------
 
 # baseline model with dropout and data augmentation on the cifar10 dataset
@@ -17,8 +17,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Dropout
 from keras.layers import BatchNormalization
 from tensorflow.keras.optimizers.schedules import CosineDecayRestarts
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
+from tensorflow.keras.callbacks import LearningRateScheduler
 
 # load train and test dataset
 def load_dataset():
@@ -42,72 +41,83 @@ def prep_pixels(train, test):
 
 # define cnn model
 def define_model():
-	model = Sequential()
-	model.add(Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same', input_shape=(32, 32, 3)))
-	model.add(BatchNormalization())
-	model.add(Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
-	model.add(BatchNormalization())
-	model.add(MaxPooling2D((2, 2)))
-	model.add(Dropout(0.2))
-	model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
-	model.add(BatchNormalization())
-	model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
-	model.add(BatchNormalization())
-	model.add(MaxPooling2D((2, 2)))
-	model.add(Dropout(0.3))
-	model.add(Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
-	model.add(BatchNormalization())
-	model.add(Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
-	model.add(BatchNormalization())
-	model.add(MaxPooling2D((2, 2)))
-	model.add(Dropout(0.4))
-	model.add(Flatten())
-	model.add(Dense(128, activation='relu', kernel_initializer='he_uniform'))
-	model.add(BatchNormalization())
-  model.add(Dropout(0.5))
-  model.add(Dense(10, activation='softmax'))
-  cosinedecay_restarts = CosineDecayRestarts(initial_learning_rate=0.001, first_decay_steps=1000)
-  opt = Adam(learning_rate=cosinedecay_restarts)
-  model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
-  return model
+    model = Sequential()
+    model.add(Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same', input_shape=(32, 32, 3)))
+    model.add(BatchNormalization())
+    model.add(Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((2, 2)))
+    model.add(Dropout(0.2))
+    model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
+    model.add(BatchNormalization())
+    model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((2, 2)))
+    model.add(Dropout(0.3))
+    model.add(Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
+    model.add(BatchNormalization())
+    model.add(Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((2, 2)))
+    model.add(Dropout(0.4))
+    model.add(Flatten())
+    model.add(Dense(128, activation='relu', kernel_initializer='he_uniform'))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.5))
+    model.add(Dense(10, activation='softmax'))
+    opt = Adam(learning_rate=0.001)
+    model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
+    return model
 
 # plot diagnostic learning curves
 def summarize_diagnostics(history):
-    fig, (ax1, ax2) = pyplot.subplots(2)
+    fig, (ax1, ax2, ax3) = pyplot.subplots(3, figsize=(10, 10))
     # plot loss
     ax1.set_title('Cross Entropy Loss')
     ax1.plot(history.history['loss'], color='blue', label='train')
     ax1.plot(history.history['val_loss'], color='orange', label='test')
+    ax1.set_xlabel('Epochs', fontsize='small')
+    ax1.set_ylabel('Loss', fontsize='small')
+    ax1.legend(loc='best')
     # plot accuracy
     ax2.set_title('Classification Accuracy')
     ax2.plot(history.history['accuracy'], color='blue', label='train')
     ax2.plot(history.history['val_accuracy'], color='orange', label='test')
+    ax2.set_xlabel('Epochs', fontsize='small')
+    ax2.set_ylabel('Accuracy', fontsize='small')
+    ax2.legend(loc='best')
+    # plot learning rate
+    ax3.set_title('Learning Rate')
+    ax3.plot(history.history['lr'], color='blue')
+    ax3.set_xlabel('Epochs', fontsize='small')
+    ax3.set_ylabel('Learning Rate', fontsize='small')
     # save plot to file
     fig.tight_layout()
     filename = sys.argv[0].split('/')[-1]
-    fig.savefig(filename + '_plot.png')
+    fig.savefig(filename + '_plot.pdf')
     pyplot.close()
 
 # run the test harness for evaluating a model
 def run_test_harness():
 	# load dataset
-	trainX, trainY, testX, testY = load_dataset()
+    trainX, trainY, testX, testY = load_dataset()
 	# prepare pixel data
-	trainX, testX = prep_pixels(trainX, testX)
+    trainX, testX = prep_pixels(trainX, testX)
 	# define model
-	model = define_model()
+    model = define_model()
 	# create data generator
-	datagen = ImageDataGenerator(width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True)
+    datagen = ImageDataGenerator(width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True)
 	# prepare iterator
-	it_train = datagen.flow(trainX, trainY, batch_size=64)
+    it_train = datagen.flow(trainX, trainY, batch_size=64)
 	# fit model
-	steps = int(trainX.shape[0] / 64)
-	history = model.fit_generator(it_train, steps_per_epoch=steps, epochs=10, validation_data=(testX, testY), verbose=1)
+    steps = int(trainX.shape[0] / 64)
+    lr_decayed_fn = CosineDecayRestarts(0.001, 1000)
+    history = model.fit_generator(it_train, steps_per_epoch=steps, epochs=400, validation_data=(testX, testY), verbose=1, callbacks=[LearningRateScheduler(lr_decayed_fn)])
 	# evaluate model
-	_, acc = model.evaluate(testX, testY, verbose=0)
-	print('> %.3f' % (acc * 100.0))
+    _, acc = model.evaluate(testX, testY, verbose=0)
+    print('> %.3f' % (acc * 100.0))
 	# learning curves
-	summarize_diagnostics(history)
+    summarize_diagnostics(history)
 
 # entry point, run the test harness
 run_test_harness()
