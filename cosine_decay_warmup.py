@@ -16,8 +16,6 @@ from tensorflow.keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Dropout
 from keras.layers import BatchNormalization
-from tensorflow.keras.optimizers.schedules import CosineDecay
-from tensorflow.keras.callbacks import LearningRateScheduler
 from tensorflow.keras import backend as K
 import numpy as np
 from tensorflow import keras
