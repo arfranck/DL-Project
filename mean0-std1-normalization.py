@@ -40,8 +40,8 @@ def prep_pixels(train, test):
 	print(mean.shape)
 	print(std)
 	print(std.shape)
-	train_norm -= mean 
-	train_norm /= std
+	train_norm = (train_norm - mean) / std 
+	test_norm = (test_norm - mean) / std 
 	# return normalized images
 	return train_norm, test_norm
 
