@@ -82,23 +82,23 @@ def summarize_diagnostics(history):
     
 # run the test harness for evaluating a model
 def run_test_harness():
-	# load dataset
-	trainX, trainY, testX, testY = load_dataset()
-	# prepare pixel data
-	trainX, testX = prep_pixels(trainX, testX)
-	# define model
-	model = define_model()
-	# create data generator
-	datagen = ImageDataGenerator(width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True)
-	# prepare iterator
-	it_train = datagen.flow(trainX, trainY, batch_size=64)
-	# fit model
-	steps = int(trainX.shape[0] / 64)
-	history = model.fit(it_train, steps_per_epoch=steps, epochs=100, validation_data=(testX, testY), verbose=1)
-	# evaluate model
-	_, acc = model.evaluate(testX, testY, verbose=0)
-	print('> %.3f' % (acc * 100.0))
-	# learning curves
-	summarize_diagnostics(history)
+    # load dataset
+    trainX, trainY, testX, testY = load_dataset()
+    # prepare pixel data
+    trainX, testX = prep_pixels(trainX, testX)
+    # define model
+    model = define_model()
+    # create data generator
+    datagen = ImageDataGenerator(width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True)
+    # prepare iterator
+    it_train = datagen.flow(trainX, trainY, batch_size=64)
+    # fit model
+    steps = int(trainX.shape[0] / 64)
+    history = model.fit(it_train, steps_per_epoch=steps, epochs=100, validation_data=(testX, testY), verbose=1)
+    # evaluate model
+    _, acc = model.evaluate(testX, testY, verbose=0)
+    print('> %.3f' % (acc * 100.0))
+    # learning curves
+    summarize_diagnostics(history)
     
 run_test_harness()
