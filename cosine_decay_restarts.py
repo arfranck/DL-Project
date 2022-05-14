@@ -17,7 +17,6 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Dropout
 from keras.layers import BatchNormalization
 from tensorflow.keras.optimizers.schedules import CosineDecayRestarts
-from tensorflow.keras.callbacks import LearningRateScheduler
 
 # load train and test dataset
 def load_dataset():
@@ -65,13 +64,14 @@ def define_model():
     model.add(BatchNormalization())
     model.add(Dropout(0.5))
     model.add(Dense(10, activation='softmax'))
-    opt = Adam(learning_rate=0.001)
+    cosinedecayrestart = CosineDecayRestarts(0.001, 1000)
+    opt = Adam(learning_rate=cosinedecayrestart)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
 # plot diagnostic learning curves
 def summarize_diagnostics(history):
-    fig, (ax1, ax2, ax3) = pyplot.subplots(3, figsize=(10, 10))
+    fig, (ax1, ax2) = pyplot.subplots(2, figsize=(10, 10))
     # plot loss
     ax1.set_title('Cross Entropy Loss')
     ax1.plot(history.history['loss'], color='blue', label='train')
@@ -86,11 +86,6 @@ def summarize_diagnostics(history):
     ax2.set_xlabel('Epochs', fontsize='small')
     ax2.set_ylabel('Accuracy', fontsize='small')
     ax2.legend(loc='best')
-    # plot learning rate
-    ax3.set_title('Learning Rate')
-    ax3.plot(history.history['lr'], color='blue')
-    ax3.set_xlabel('Epochs', fontsize='small')
-    ax3.set_ylabel('Learning Rate', fontsize='small')
     # save plot to file
     fig.tight_layout()
     filename = sys.argv[0].split('/')[-1]
@@ -111,8 +106,7 @@ def run_test_harness():
     it_train = datagen.flow(trainX, trainY, batch_size=64)
 	# fit model
     steps = int(trainX.shape[0] / 64)
-    lr_decayed_fn = CosineDecayRestarts(0.001, 1000)
-    history = model.fit_generator(it_train, steps_per_epoch=steps, epochs=400, validation_data=(testX, testY), verbose=1, callbacks=[LearningRateScheduler(lr_decayed_fn)])
+    history = model.fit_generator(it_train, steps_per_epoch=steps, epochs=400, validation_data=(testX, testY), verbose=1)
 	# evaluate model
     _, acc = model.evaluate(testX, testY, verbose=0)
     print('> %.3f' % (acc * 100.0))
