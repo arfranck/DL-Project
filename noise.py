@@ -18,7 +18,6 @@ from keras.layers import Dropout
 from keras.layers import BatchNormalization
 import numpy as np
 import random
-import copy
 
 def add_noise(trainY):
     noise = 10
@@ -42,13 +41,7 @@ def add_noise(trainY):
 def load_dataset():
     # load dataset
     (trainX, trainY), (testX, testY) = cifar10.load_data()
-    old_trainY = trainY
-    trainY = add_noise(copy.deepcopy(trainY))
-    count = 0
-    for i in range(len(trainY)):
-        if trainY[i] != old_trainY[i]:
-            count += 1
-    print(count)
+    trainY = add_noise(trainY)
     # one hot encode target values
     trainY = to_categorical(trainY)
     testY = to_categorical(testY)
@@ -124,21 +117,21 @@ def run_test_harness():
     # load dataset
     trainX, trainY, testX, testY = load_dataset()
     # prepare pixel data
-    #trainX, testX = prep_pixels(trainX, testX)
+    trainX, testX = prep_pixels(trainX, testX)
     # define model
-    #model = define_model()
+    model = define_model()
     # create data generator
-    #datagen = ImageDataGenerator(width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True)
+    datagen = ImageDataGenerator(width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True)
     # prepare iterator
-    #it_train = datagen.flow(trainX, trainY, batch_size=64)
+    it_train = datagen.flow(trainX, trainY, batch_size=64)
     # fit model
-    #steps = int(trainX.shape[0] / 64)
-    #history = model.fit(it_train, steps_per_epoch=steps, epochs=1, validation_data=(testX, testY), verbose=1)
+    steps = int(trainX.shape[0] / 64)
+    history = model.fit(it_train, steps_per_epoch=steps, epochs=1, validation_data=(testX, testY), verbose=1)
     # evaluate model
-    #_, acc = model.evaluate(testX, testY, verbose=0)
-    #print('> %.3f' % (acc * 100.0))
+    _, acc = model.evaluate(testX, testY, verbose=0)
+    print('> %.3f' % (acc * 100.0))
     # learning curves
-    #summarize_diagnostics(history)
+    summarize_diagnostics(history)
     return trainX, trainY, testX, testY
 
 # entry point, run the test harness
