@@ -16,12 +16,10 @@ from tensorflow.keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Dropout
 from keras.layers import BatchNormalization
-import numpy as np
 import random
 
 def add_noise(trainY):
     noise = 10
-    random_idx = []
     to_change = len(trainY) * noise/100
     changed = 0
     idx = {}
@@ -29,9 +27,9 @@ def add_noise(trainY):
         index = random.randint(0,len(trainY))
         if index in idx:
             continue
-        new_label = random.randint(0, 10)
+        new_label = random.randint(0, 9)
         while new_label == trainY[index]:
-            new_label = random.randint(0, 10)
+            new_label = random.randint(0, 9)
         trainY[index] = new_label
         changed += 1
         idx[index] = True
@@ -126,13 +124,12 @@ def run_test_harness():
     it_train = datagen.flow(trainX, trainY, batch_size=64)
     # fit model
     steps = int(trainX.shape[0] / 64)
-    history = model.fit(it_train, steps_per_epoch=steps, epochs=1, validation_data=(testX, testY), verbose=1)
+    history = model.fit(it_train, steps_per_epoch=steps, epochs=400, validation_data=(testX, testY), verbose=1)
     # evaluate model
     _, acc = model.evaluate(testX, testY, verbose=0)
     print('> %.3f' % (acc * 100.0))
     # learning curves
     summarize_diagnostics(history)
-    return trainX, trainY, testX, testY
 
 # entry point, run the test harness
-trainX, trainY, testX, testY = run_test_harness()
+run_test_harness()
