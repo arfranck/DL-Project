@@ -82,7 +82,7 @@ def create_res_net():
         num_filters *= 2
     t = AveragePooling2D(4)(t)
     t = Flatten()(t)
-    outputs = Dense(10, activation='softmax')(t)
+    outputs = Dense(100, activation='softmax')(t)
     model = Model(inputs, outputs)
     model.compile(
         optimizer='adam',
