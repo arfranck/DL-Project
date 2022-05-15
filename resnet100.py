@@ -124,7 +124,7 @@ def run_test_harness():
 	# define model
     model = create_res_net()
     timestr = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    name = 'cifar-10_res_net_30-'+timestr # or 'cifar-10_plain_net_30-'+timestr
+    name = 'cifar-100_res_net_30-'+timestr # or 'cifar-10_plain_net_30-'+timestr
     checkpoint_path = "checkpoints/"+name+"/cp-{epoch:04d}.ckpt"
     checkpoint_dir = os.path.dirname(checkpoint_path)
     os.system('mkdir {}'.format(checkpoint_dir))
