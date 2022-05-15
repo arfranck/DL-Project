@@ -7,18 +7,11 @@ import sys
 from matplotlib import pyplot
 from keras.datasets import cifar10
 from tensorflow.keras.utils import to_categorical
-from keras.models import Sequential
 from keras.layers import Conv2D
-from keras.layers import MaxPooling2D
 from keras.layers import Dense
 from keras.layers import Flatten
-from tensorflow.keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
-from keras.layers import Dropout
 from keras.layers import BatchNormalization
-from tensorflow.keras import backend as K
-import numpy as np
-from tensorflow import keras
 from tensorflow import Tensor
 from tensorflow.keras.layers import Input, ReLU, Add, AveragePooling2D
 from tensorflow.keras.models import Model
@@ -123,7 +116,7 @@ def summarize_diagnostics(history):
 
 # run the test harness for evaluating a model
 def run_test_harness():
-    epochs = 20
+    epochs = 30
 	# load dataset
     trainX, trainY, testX, testY = load_dataset()
 	# prepare pixel data
@@ -140,7 +133,6 @@ def run_test_harness():
 	# prepare iterator
     it_train = datagen.flow(trainX, trainY, batch_size=64)
 	# fit model
-    steps = int(trainX.shape[0] / 64)
     # save model after each epoch
     cp_callback = ModelCheckpoint(filepath=checkpoint_path, verbose=1)
     tensorboard_callback = TensorBoard(log_dir='tensorboard_logs/'+name, histogram_freq=1)
