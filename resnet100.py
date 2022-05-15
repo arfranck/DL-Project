@@ -136,7 +136,7 @@ def run_test_harness():
     # save model after each epoch
     cp_callback = ModelCheckpoint(filepath=checkpoint_path, verbose=1)
     tensorboard_callback = TensorBoard(log_dir='tensorboard_logs/'+name, histogram_freq=1)
-    history = model.fit(it_train, epochs=epochs, validation_data=(testX, testY), verbose=1, callgbacks=[cp_callback, tensorboard_callback])
+    history = model.fit(it_train, epochs=epochs, validation_data=(testX, testY), verbose=1, callbacks=[cp_callback, tensorboard_callback])
 	# evaluate model
     _, acc = model.evaluate(testX, testY, verbose=0)
     print('> %.3f' % (acc * 100.0))
