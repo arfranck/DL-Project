@@ -82,6 +82,8 @@ def create_res_net():
         num_filters *= 2
     t = AveragePooling2D(4)(t)
     t = Flatten()(t)
+    # t = Dropout(0.2)(t)
+    # t = GaussianNoise(0.1)(t)
     outputs = Dense(10, activation='softmax')(t)
     model = Model(inputs, outputs)
     model.compile(
@@ -116,7 +118,7 @@ def summarize_diagnostics(history):
 
 # run the test harness for evaluating a model
 def run_test_harness():
-    epochs = 30
+    epochs = 100
 	# load dataset
     trainX, trainY, testX, testY = load_dataset()
 	# prepare pixel data
