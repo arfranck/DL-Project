@@ -116,7 +116,7 @@ def summarize_diagnostics(history):
 
 # run the test harness for evaluating a model
 def run_test_harness():
-    epochs = 30
+    epochs = 100
 	# load dataset
     trainX, trainY, testX, testY = load_dataset()
 	# prepare pixel data
