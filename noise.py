@@ -19,12 +19,12 @@ from keras.layers import BatchNormalization
 import random
 
 def add_noise(trainY):
-    noise = 10
-    to_change = len(trainY) * noise/100
+    noise = 100
+    to_change = len(trainY) * noise/100 - 1
     changed = 0
     idx = {}
     while changed < to_change:
-        index = random.randint(0,len(trainY))
+        index = random.randint(0,len(trainY)-1)
         if index in idx:
             continue
         new_label = random.randint(0, 9)
@@ -124,7 +124,7 @@ def run_test_harness():
     it_train = datagen.flow(trainX, trainY, batch_size=64)
     # fit model
     steps = int(trainX.shape[0] / 64)
-    history = model.fit(it_train, steps_per_epoch=steps, epochs=400, validation_data=(testX, testY), verbose=1)
+    history = model.fit(it_train, steps_per_epoch=steps, epochs=100, validation_data=(testX, testY), verbose=1)
     # evaluate model
     _, acc = model.evaluate(testX, testY, verbose=0)
     print('> %.3f' % (acc * 100.0))
