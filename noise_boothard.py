@@ -61,11 +61,11 @@ def prep_pixels(train, test):
 
 """
 def symmetric_cross_entropy(alpha=1, beta=1):
-    """
+    ""
     Symmetric Cross Entropy: 
     ICCV2019 "Symmetric Cross Entropy for Robust Learning with Noisy Labels" 
     https://arxiv.org/abs/1908.06112
-    """
+    ""
     def loss(y_true, y_pred):
         y_true_1 = y_true
         y_pred_1 = y_pred
