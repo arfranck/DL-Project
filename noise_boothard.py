@@ -59,13 +59,13 @@ def prep_pixels(train, test):
     # return normalized images
     return train_norm, test_norm
 
-"""
+
 def symmetric_cross_entropy(alpha=1, beta=1):
-    ""
+    """
     Symmetric Cross Entropy: 
     ICCV2019 "Symmetric Cross Entropy for Robust Learning with Noisy Labels" 
     https://arxiv.org/abs/1908.06112
-    ""
+    """
     def loss(y_true, y_pred):
         y_true_1 = y_true
         y_pred_1 = y_pred
@@ -78,7 +78,7 @@ def symmetric_cross_entropy(alpha=1, beta=1):
 
         return alpha*tf.reduce_mean(-tf.reduce_sum(y_true_1 * tf.math.log(y_pred_1), axis = -1)) + beta*tf.reduce_mean(-tf.reduce_sum(y_pred_2 * tf.math.log(y_true_2), axis = -1))
     return loss
- """
+ 
 
 # https://github.com/xingjunm/dimensionality-driven-learning
 def lid(logits, k=20):
